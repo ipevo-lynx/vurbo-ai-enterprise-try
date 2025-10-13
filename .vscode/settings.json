@@ -1,5 +1,8 @@
 {
-  "cSpell.words": ["ofetch"],
+  "cSpell.words": [
+    "ofetch",
+    "Vurbo"
+  ],
   // 禁用自動格式化（改由 ESLint 處理）
   "prettier.enable": false,
   "editor.formatOnSave": false,
