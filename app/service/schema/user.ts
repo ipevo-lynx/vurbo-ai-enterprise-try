@@ -30,7 +30,6 @@ export const UserResponseSchema = createApiResponseSchema(UserDataSchema)
 
 // 型別導出
 export type UserData = z.infer<typeof UserDataSchema>
-export type LoginRequest = z.infer<typeof LoginRequestSchema>
 export type LoginData = z.infer<typeof LoginDataSchema>
 
 // 用於頁面和 Composable 的型別註解

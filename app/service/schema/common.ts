@@ -28,77 +28,8 @@ export interface ApiResponse<T = unknown> {
   redirect_url: string | null
 }
 
-// 驗證結果接口 (被多個驗證相關模組使用)
-export interface ValidationResult {
-  success: boolean
-  data?: any
-  error?: string
-  errors?: Array<{
-    field: string
-    message: string
-  }>
-  summary?: string
-}
-
-// API 狀態相關
-export interface ApiState {
-  loading: boolean
-  error: string | null
-  success: boolean
-}
-
-// 頁面狀態管理通用介面（簡化版，移除 data）
-export interface PageState {
-  ui: Record<string, any>
-  loading: Record<string, boolean>
-  errors: Record<string, string>
-}
-
 // 載入狀態
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error'
-
-// 詳細驗證 data 欄位的輔助函數（保留供未來使用）
-function _tryValidateDataField(originalData: any, schema: ZodType): string[] {
-  const detailedErrors: string[] = []
-
-  try {
-    // 從 schema 中提取 data 欄位的 schema
-    const schemaDef = (schema as any)._def
-    if (schemaDef.typeName === 'ZodObject' && schemaDef.shape().data) {
-      const dataFieldSchema = schemaDef.shape().data
-      const actualData = originalData?.data
-
-      // 檢查 data 欄位是否為 nullable union 類型
-      if ((dataFieldSchema as any)._def.typeName === 'ZodNullable') {
-        const innerSchema = (dataFieldSchema as any)._def.innerType
-        if ((innerSchema as any)._def.typeName === 'ZodUnion') {
-          const unionOptions = (innerSchema as any)._def.options
-
-          // 驗證每個 union 選項並收集錯誤
-          for (let i = 0; i < unionOptions.length; i++) {
-            const option = unionOptions[i]
-            const optionResult = option.safeParse(actualData)
-
-            if (!optionResult.success) {
-              const optionType = (option as any)._def.typeName === 'ZodArray' ? '陣列格式' : '物件格式'
-              detailedErrors.push(`   ➤ 嘗試 ${optionType} 驗證失敗:`)
-
-              optionResult.error.errors.forEach((err: any, errIndex: number) => {
-                const fullPath = err.path.length > 0 ? `data.${err.path.join('.')}` : 'data'
-                detailedErrors.push(`     ${errIndex + 1}. [${fullPath}] ${err.message}`)
-              })
-            }
-          }
-        }
-      }
-    }
-  }
-  catch {
-    // 詳細驗證失敗時跳過
-  }
-
-  return detailedErrors
-}
 
 // Schema 驗證函數
 // 設計原則：API 結構有問題時，只在開發模式下發出 log 告知，不會阻止資料返回
