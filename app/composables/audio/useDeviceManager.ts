@@ -56,6 +56,12 @@ export function useDeviceManager() {
     clearErrors()
 
     try {
+      // 檢查是否在瀏覽器環境中
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices) {
+        console.warn('⚠️ Media devices not available in server environment')
+        return []
+      }
+
       console.log('🔍 開始獲取音訊設備列表...')
 
       // 請求麥克風權限

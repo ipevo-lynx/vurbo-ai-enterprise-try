@@ -40,7 +40,23 @@ onMounted(async () => {
           </p>
         </div>
 
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-8">
+          <!-- 導航選單 -->
+          <nav class="hidden md:flex space-x-6">
+            <NuxtLink
+              to="/"
+              class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              首頁
+            </NuxtLink>
+            <NuxtLink
+              to="/websocket-poc"
+              class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              🔌 WebSocket POC
+            </NuxtLink>
+          </nav>
+
           <!-- 登入狀態顯示 -->
           <div
             v-if="authStore.isLoggedIn"
